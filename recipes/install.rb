@@ -122,7 +122,7 @@ end
 key_file_content = node['mongodb']['key_file_content']
 
 if key_file_content
-  file config['keyFile'] do
+  file node['mongodb']['config'][config_type]['security']['keyFile'] do
     owner node['mongodb']['user']
     group node['mongodb']['group']
     mode  '0600'
