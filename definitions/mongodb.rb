@@ -155,6 +155,12 @@ define :mongodb_instance,
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
+  security = nil
+  if node.recipe?('sc-mongodb::user_management')
+    security = new_resource.config.select {|key, value| ['security'].include?(key) }
+    new_resource.config = Hash[new_resource.config.to_a - security.to_a]
+  end
+
   # config file
   template new_resource.dbconfig_file do
     cookbook new_resource.template_cookbook
