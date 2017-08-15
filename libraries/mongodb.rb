@@ -99,12 +99,12 @@ class Chef::ResourceDefinitionList::MongoDB
 
     admin = connection['admin']
     cmd = BSON::OrderedHash.new
-    # settings = BSON::OrderedHash.new
-    # settings['heartbeatTimeoutSecs'] = node['mongodb']['replica_heartbeat_timeout_secs'] if node['mongodb'].has_key?('replica_heartbeat_timeout_secs')
+    settings = BSON::OrderedHash.new
+    settings['heartbeatTimeoutSecs'] = node['mongodb']['replica_heartbeat_timeout_secs'] if node['mongodb'].has_key?('replica_heartbeat_timeout_secs')
     cmd['replSetInitiate'] = {
       '_id' => name,
       'members' => rs_members,
-      # 'settings' => settings,
+      'settings' => settings,
     }
 
     begin
