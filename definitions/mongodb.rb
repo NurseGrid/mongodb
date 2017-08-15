@@ -155,11 +155,25 @@ define :mongodb_instance,
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
-  # security = nil
-  # security = new_resource.config.select {|key, value| ['security'].include?(key) }
-  # new_resource.config = Hash[new_resource.config.to_a - security.to_a]
+  security = nil
+  security = new_resource.config.select {|key, value| ['security'].include?(key) }
+  config_without_security = Hash[new_resource.config.to_a - security.to_a]
 
   # config file
+  template new_resource.dbconfig_file do
+    cookbook new_resource.template_cookbook
+    source new_resource.dbconfig_file_template
+    group new_resource.root_group
+    owner 'root'
+    variables(
+      config: config_without_security
+    )
+    helpers MongoDBConfigHelpers
+    mode '0644'
+    notifies new_resource.reload_action, "service[#{new_resource.name}]"
+  end
+
+  # only set lockdown after admin users are created
   template new_resource.dbconfig_file do
     cookbook new_resource.template_cookbook
     source new_resource.dbconfig_file_template
@@ -170,6 +184,7 @@ define :mongodb_instance,
     )
     helpers MongoDBConfigHelpers
     mode '0644'
+    subscribes :create, 'ruby_block[config_replicaset]', :delayed if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
