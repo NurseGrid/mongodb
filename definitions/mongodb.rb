@@ -184,6 +184,7 @@ define :mongodb_instance,
     )
     helpers MongoDBConfigHelpers
     mode '0644'
+    action :nothing
     subscribes :create, 'ruby_block[config_replicaset]', :delayed if new_resource.is_replicaset && new_resource.auto_configure_replicaset
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
