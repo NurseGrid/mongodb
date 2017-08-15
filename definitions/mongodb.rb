@@ -155,9 +155,9 @@ define :mongodb_instance,
     notifies new_resource.reload_action, "service[#{new_resource.name}]"
   end
 
-  security = nil
-  security = new_resource.config.select {|key, value| ['security'].include?(key) }
-  new_resource.config = Hash[new_resource.config.to_a - security.to_a]
+  # security = nil
+  # security = new_resource.config.select {|key, value| ['security'].include?(key) }
+  # new_resource.config = Hash[new_resource.config.to_a - security.to_a]
 
   # config file
   template new_resource.dbconfig_file do
