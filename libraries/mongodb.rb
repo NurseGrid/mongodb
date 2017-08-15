@@ -179,10 +179,10 @@ class Chef::ResourceDefinitionList::MongoDB
         old_members = config['members'].map { |member| member['host'] }
         members_delete = old_members - rs_members
         config['members'] = config['members'].delete_if { |m| members_delete.include?(m['host']) }
-        config['members'].map! do |m|
-          host = m['host']
-          { '_id' => m['_id'], 'host' => host }.merge(rs_options[host])
-        end
+        # config['members'].map! do |m|
+        #   host = m['host']
+        #   { '_id' => m['_id'], 'host' => host }.merge(rs_options[host])
+        # end
 
         ids = (0...256).to_a - old_ids
 
@@ -190,10 +190,10 @@ class Chef::ResourceDefinitionList::MongoDB
         remaining_members = config['members'].count
 
         members_add = rs_members - old_members
-        members_add.each do |m|
-          new_id = ids.shift
-          config['members'] << { '_id' => new_id, 'host' => m }.merge(rs_options[m])
-        end
+        # members_add.each do |m|
+        #   new_id = ids.shift
+        #   config['members'] << { '_id' => new_id, 'host' => m }.merge(rs_options[m])
+        # end
         Chef::Log.info "after adding new members, config = #{config}"
 
         rs_connection = nil
