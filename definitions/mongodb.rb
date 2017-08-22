@@ -265,7 +265,7 @@ define :mongodb_instance,
               'name' => instance[:hostname],
               'fqdn' => instance[:public_dns],
               'hostname' => instance[:hostname],
-              'ipaddress' => instance[:public_ip],
+              'ipaddress' => instance[:private_ip],
               'mongodb' => node[:mongodb]
             }
             a = OpenStruct.new n
